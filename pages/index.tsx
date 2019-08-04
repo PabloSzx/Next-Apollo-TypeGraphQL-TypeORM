@@ -1,18 +1,19 @@
 import gql from "graphql-tag";
 import { NextPage } from "next";
 import Head from "next/head";
-
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery } from "react-apollo-hooks";
 
 const Home: NextPage = () => {
-  const { loading, data } = useQuery(gql`
-    query {
-      books {
-        title
-        author
+  const { loading, data } = useQuery<{ title: string; author: string }[]>(
+    gql`
+      query {
+        books {
+          title
+        }
       }
-    }
-  `);
+    `,
+    {}
+  );
 
   return (
     <>
@@ -20,7 +21,7 @@ const Home: NextPage = () => {
         <title>Home</title>
       </Head>
       <div>
-        <p>{!loading && JSON.stringify(data, null, 4)}</p>
+        <p>{!loading && data ? JSON.stringify(data, null, 4) : "loading..."}</p>
       </div>
     </>
   );
