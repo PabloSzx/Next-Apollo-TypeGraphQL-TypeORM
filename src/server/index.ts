@@ -3,10 +3,12 @@ import "reflect-metadata";
 import { ApolloServer } from "apollo-server-express";
 import express from "express";
 import next from "next";
-import { createConnection } from "typeorm";
+import notifier from "node-notifier";
+import { Container } from "typedi";
+import { createConnection, useContainer } from "typeorm";
 
-import { dbConfig } from "./db/config";
-import { context, GraphQLSchema } from "./graphql";
+import { dbConfig } from "./db";
+import { GraphQLSchema } from "./graphql";
 
 const app = express();
 
@@ -16,8 +18,10 @@ const nextApp = next({
 
 const nextHandle = nextApp.getRequestHandler();
 
+useContainer(Container);
+
 (async () => {
-  const [schema, dbConnection] = await Promise.all([
+  const [schema] = await Promise.all([
     GraphQLSchema,
     createConnection(dbConfig),
     nextApp.prepare(),
@@ -33,7 +37,6 @@ const nextHandle = nextApp.getRequestHandler();
             },
           }
         : false,
-    context: context(dbConnection),
   });
 
   const path = "/graphql";
@@ -51,6 +54,13 @@ const nextHandle = nextApp.getRequestHandler();
   const port = 3000;
 
   app.listen({ port }, () => {
-    console.log(`Servera Listening on port ${port}!`);
+    const message = `Server Listening on port ${port}!`;
+    console.log(message);
+    if (process.env.NODE_ENV !== "production") {
+      notifier.notify({
+        title: "🚀  Server ready",
+        message: `at http://localhost:${port}`,
+      });
+    }
   });
 })();

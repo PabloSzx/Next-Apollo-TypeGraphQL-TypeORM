@@ -3,12 +3,15 @@ import { NextPage } from "next";
 import Head from "next/head";
 import { useQuery } from "react-apollo-hooks";
 
+import { User } from "../src/server/entities/user";
+
 const Home: NextPage = () => {
-  const { loading, data } = useQuery<{ title: string; author: string }[]>(
+  const { loading, data } = useQuery<{ users: User[] }>(
     gql`
       query {
-        books {
-          title
+        users {
+          firstName
+          id
         }
       }
     `,

@@ -1,5 +1,6 @@
 import ApolloClient from "apollo-boost";
 import App, { Container } from "next/app";
+import Head from "next/head";
 import { ApolloProvider } from "react-apollo";
 import { ApolloProvider as HooksApolloProvider } from "react-apollo-hooks";
 
@@ -11,6 +12,13 @@ class MyApp extends App<{ apollo: ApolloClient<any> }> {
 
     return (
       <Container>
+        <Head>
+          <link
+            rel="shortcut icon"
+            type="image/x-icon"
+            href="/static/favicon.ico"
+          />
+        </Head>
         <HooksApolloProvider client={apollo}>
           <ApolloProvider client={apollo}>
             <Component {...pageProps} />

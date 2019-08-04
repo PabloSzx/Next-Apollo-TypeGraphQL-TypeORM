@@ -1,20 +1,11 @@
+import { resolve } from "path";
 import { buildSchema } from "type-graphql";
-import { Connection } from "typeorm";
-
-import { User } from "../models/user";
-import { BookResolver } from "./resolvers";
+import { Container } from "typedi";
 
 export const GraphQLSchema = buildSchema({
-  resolvers: [BookResolver],
+  resolvers: [resolve(__dirname, "./resolvers/*.ts")],
   validate: false,
   globalMiddlewares: [],
+  emitSchemaFile: resolve(__dirname, "../../../schema.gql"),
+  container: Container,
 });
-
-export const context = (dbConnection: Connection) => {
-  return {
-    dbConnection,
-    UserRepository: dbConnection.getRepository(User),
-  };
-};
-
-export type IContext = ReturnType<typeof context>;
