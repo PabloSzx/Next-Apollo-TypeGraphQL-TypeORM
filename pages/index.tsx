@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 import { NextPage } from "next";
 import Head from "next/head";
-import { useQuery } from "react-apollo-hooks";
+import { useQuery } from "react-apollo";
 
 import { User } from "../src/server/entities/user";
 
